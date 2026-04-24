@@ -1,0 +1,67 @@
+@page "/"
+
+<PageTitle>Upcoming Classes</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Upcoming Classes</MudText>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_classes.Count == 0)
+{
+    <MudAlert Severity="Severity.Info">No upcoming classes found.</MudAlert>
+}
+else
+{
+    <MudGrid>
+        @foreach (var c in _classes)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard Elevation="2">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@c.Name</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">@c.InstructorName</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText>📅 @c.StartsAt.ToLocalTime().ToString("ddd, MMM d · HH:mm")</MudText>
+                        <MudText>⏱ @c.DurationMinutes min</MudText>
+                        <MudDivider Class="my-2" />
+                        @if (c.ConfirmedCount < c.MaxCapacity)
+                        {
+                            <MudChip T="string" Color="Color.Success" Size="Size.Small">
+                                @(c.MaxCapacity - c.ConfirmedCount) spots left
+                            </MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Color="Color.Error" Size="Size.Small">
+                                FULL · @c.WaitlistCount waiting
+                            </MudChip>
+                        }
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Href="@($"/book/{c.Id}")" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">
+                            View & Book
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    [Inject] private GymApiClient Api { get; set; } = default!;
+
+    private List<GymClassSummary> _classes = new();
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _classes = await Api.GetUpcomingClassesAsync();
+        _loading = false;
+    }
+}

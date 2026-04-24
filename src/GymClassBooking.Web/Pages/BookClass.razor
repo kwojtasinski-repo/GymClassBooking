@@ -1,0 +1,116 @@
+@page "/book/{ClassId:int}"
+
+<PageTitle>Book Class</PageTitle>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_gymClass is null)
+{
+    <MudAlert Severity="Severity.Error">Class not found.</MudAlert>
+}
+else
+{
+    <MudText Typo="Typo.h4" Class="mb-1">@_gymClass.Name</MudText>
+    <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-3">
+        @_gymClass.InstructorName · @_gymClass.StartsAt.ToLocalTime().ToString("ddd, MMM d · HH:mm") ·
+        @_gymClass.DurationMinutes min
+    </MudText>
+
+    @if (_gymClass.ConfirmedCount < _gymClass.MaxCapacity)
+    {
+        <MudChip T="string" Color="Color.Success">@(_gymClass.MaxCapacity - _gymClass.ConfirmedCount) spots available</MudChip>
+    }
+    else
+    {
+        <MudChip T="string" Color="Color.Error">FULL · @_gymClass.WaitlistCount on waitlist</MudChip>
+    }
+
+    <MudDivider Class="my-4" />
+
+    @if (_myBooking is not null)
+    {
+        <MudAlert Severity="Severity.Info" Class="mb-3">
+            Your booking: <strong>@_myBooking.Status</strong>
+            @if (_myBooking.WaitlistPosition.HasValue)
+            {
+                <span> · Waitlist position: <strong>#@_myBooking.WaitlistPosition</strong></span>
+            }
+        </MudAlert>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="CancelAsync" Disabled="_processing">
+            Cancel Booking
+        </MudButton>
+    }
+    else
+    {
+        <MudNumericField @bind-Value="_memberId" Label="Member ID" Min="1" Class="mb-3" Style="max-width:200px" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="BookAsync" Disabled="_processing">
+            Book Class
+        </MudButton>
+    }
+}
+
+@code {
+    [Parameter] public int ClassId { get; set; }
+    [Inject] private GymApiClient Api { get; set; } = default!;
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
+
+    private GymClassSummary? _gymClass;
+    private BookingResponse? _myBooking;
+    private bool _loading = true;
+    private bool _processing;
+    private int _memberId = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+        _loading = false;
+    }
+
+    private async Task LoadAsync()
+    {
+        var classes = await Api.GetUpcomingClassesAsync();
+        _gymClass = classes.FirstOrDefault(c => c.Id == ClassId);
+
+        if (_gymClass is not null)
+        {
+            var bookings = await Api.GetClassBookingsAsync(ClassId);
+            _myBooking = bookings.FirstOrDefault(b => b.MemberId == _memberId);
+        }
+    }
+
+    private async Task BookAsync()
+    {
+        _processing = true;
+        var (booking, error) = await Api.BookClassAsync(_memberId, ClassId);
+        if (booking is not null)
+        {
+            Snackbar.Add($"Booked! Status: {booking.Status}" + (booking.WaitlistPosition.HasValue ? $" (Waitlist #{booking.WaitlistPosition})" : ""), Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? "Failed to book.", Severity.Error);
+        }
+        _processing = false;
+    }
+
+    private async Task CancelAsync()
+    {
+        if (_myBooking is null) return;
+        _processing = true;
+        var error = await Api.CancelBookingAsync(_myBooking.Id);
+        if (error is null)
+        {
+            Snackbar.Add("Booking cancelled.", Severity.Success);
+            _myBooking = null;
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error, Severity.Error);
+        }
+        _processing = false;
+    }
+}

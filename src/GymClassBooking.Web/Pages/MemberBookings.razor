@@ -1,0 +1,72 @@
+@page "/member/{MemberId:int}"
+
+<PageTitle>My Bookings</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Member #@MemberId — Bookings</MudText>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    @if (_hasLateCancel)
+    {
+        <MudAlert Severity="Severity.Warning" Class="mb-4">
+            ⚠️ This member has a <strong>late cancellation flag</strong>. New bookings are blocked until staff clears this flag.
+        </MudAlert>
+    }
+
+    @if (_bookings.Count == 0)
+    {
+        <MudAlert Severity="Severity.Info">No bookings found for this member.</MudAlert>
+    }
+    else
+    {
+        <MudTable Items="_bookings" Hover="true" Striped="true">
+            <HeaderContent>
+                <MudTh>Class</MudTh>
+                <MudTh>Date</MudTh>
+                <MudTh>Booked At</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Waitlist #</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.GymClassName</MudTd>
+                <MudTd>@context.StartsAt.ToLocalTime().ToString("MMM d, HH:mm")</MudTd>
+                <MudTd>@context.BookedAt.ToLocalTime().ToString("MMM d, HH:mm")</MudTd>
+                <MudTd>
+                    <MudChip T="string" Color="@StatusColor(context.Status)" Size="Size.Small">
+                        @context.Status
+                    </MudChip>
+                </MudTd>
+                <MudTd>@(context.WaitlistPosition.HasValue ? $"#{context.WaitlistPosition}" : "—")</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+}
+
+@code {
+    [Parameter] public int MemberId { get; set; }
+    [Inject] private GymApiClient Api { get; set; } = default!;
+
+    private List<MemberBookingResponse> _bookings = new();
+    private bool _loading = true;
+    private bool _hasLateCancel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var member = await Api.GetMemberAsync(MemberId);
+        _hasLateCancel = member?.LateCancel ?? false;
+        _bookings = await Api.GetMemberBookingsAsync(MemberId);
+        _loading = false;
+    }
+
+    private static Color StatusColor(string status) => status switch
+    {
+        "Confirmed" => Color.Success,
+        "Waitlisted" => Color.Warning,
+        "Cancelled" => Color.Default,
+        _ => Color.Default
+    };
+}
