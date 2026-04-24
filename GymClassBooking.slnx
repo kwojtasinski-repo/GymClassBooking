@@ -1,0 +1,49 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GymClassBooking.API/GymClassBooking.API.csproj" />
+    <Project Path="src/GymClassBooking.Application/GymClassBooking.Application.csproj" />
+    <Project Path="src/GymClassBooking.Domain/GymClassBooking.Domain.csproj" />
+    <Project Path="src/GymClassBooking.Infrastructure/GymClassBooking.Infrastructure.csproj" />
+    <Project Path="src/GymClassBooking.Web/GymClassBooking.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GymClassBooking.IntegrationTests/GymClassBooking.IntegrationTests.csproj" />
+    <Project Path="tests/GymClassBooking.UnitTests/GymClassBooking.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/decisions.md" />
+    <File Path="docs/README.md" />
+  </Folder>
+  <Folder Name="/.github/">
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/workflows/ci.yml" />
+  </Folder>
+  <Folder Name="/.github/context/">
+    <File Path=".github/context/agent-decisions.md" />
+    <File Path=".github/context/anti-patterns-critical.context.md" />
+    <File Path=".github/context/repo-index.md" />
+  </Folder>
+  <Folder Name="/.github/instructions/">
+    <File Path=".github/instructions/docs-index.instructions.md" />
+    <File Path=".github/instructions/api.instructions.md" />
+    <File Path=".github/instructions/blazor.instructions.md" />
+    <File Path=".github/instructions/application.instructions.md" />
+    <File Path=".github/instructions/domain.instructions.md" />
+    <File Path=".github/instructions/testing.instructions.md" />
+  </Folder>
+  <Folder Name="/.github/skills/">
+    <File Path=".github/skills/create-api-controller/SKILL.md" />
+    <File Path=".github/skills/create-application-service/SKILL.md" />
+    <File Path=".github/skills/create-blazor-page/SKILL.md" />
+    <File Path=".github/skills/create-domain-entity/SKILL.md" />
+    <File Path=".github/skills/create-dto/SKILL.md" />
+    <File Path=".github/skills/create-integration-test/SKILL.md" />
+    <File Path=".github/skills/create-unit-test/SKILL.md" />
+    <File Path=".github/skills/create-waitlist-promotion/SKILL.md" />
+    <File Path=".github/skills/create-cancellation-policy/SKILL.md" />
+    <File Path=".github/skills/create-booking-rule/SKILL.md" />
+  </Folder>
+    <File Path=".github/skills/create-unit-test/SKILL.md" />
+  </Folder>
+</Solution>
+
