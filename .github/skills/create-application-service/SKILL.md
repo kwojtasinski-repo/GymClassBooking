@@ -10,9 +10,8 @@ Use this skill when adding a new service to `src/GymClassBooking.Application/Ser
 ## Checklist before generating
 
 1. Read `.github/context/agent-decisions.md` for decisions relevant to the feature area.
-2. Read `docs/decisions.md` for design constraints (D-001, D-002, D-003...).
-3. Identify which domain entities and DTOs the service operates on.
-4. Identify the interface that controllers will depend on.
+2. Identify which domain entities and DTOs the service operates on.
+3. Identify the interface that controllers will depend on.
 
 ## Files to create/modify
 

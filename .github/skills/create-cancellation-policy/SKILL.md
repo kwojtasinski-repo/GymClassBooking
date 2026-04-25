@@ -91,5 +91,5 @@ _cancellationPolicy.Apply(booking.Member, booking.GymClass, DateTime.UtcNow);
 - Penalty is applied **before** `SaveChangesAsync` — the flag and the status change are committed atomically.
 - The `LateCancel` flag blocks ALL future bookings until cleared by staff — this is intentional.
 - Clearing `LateCancel` is a staff-only operation — do not add auto-clear logic here.
-- Document time window decisions in `docs/decisions.md` — changing 2 hours to something else is an ADR.
+
 - Write a unit test for every new policy variant. See `create-unit-test` skill.

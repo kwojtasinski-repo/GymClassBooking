@@ -67,22 +67,6 @@
 
 > For the full routing table (task → which file to read), see `.github/instructions/docs-index.instructions.md`.
 
-### agent-decisions.md
-
-- Location: `.github/context/agent-decisions.md`
-- **Scan this FIRST** before starting any task.
-- Append-only log of corrections. Date-based H2 entries, newest at the bottom.
-- Entry format: `## YYYY-MM-DD — <area>` with fields: Context, Decision, Rationale, Action, Promote?, Status.
-- Promotion rule: 2+ occurrences of the same mistake → add to `anti-patterns-critical.context.md`.
-
-> **SELF-CORRECTION RULE (mandatory):**
-> If the user corrects your output — wrong logic, wrong layer, wrong pattern, wrong assumption — you MUST:
->
-> 1. Acknowledge the correction.
-> 2. Immediately append a new entry to `agent-decisions.md` **before** making any code fix.
-> 3. Only then apply the fix.
->    This applies even if you think the entry is minor. When in doubt, log it.
-
 ### anti-patterns-critical.context.md
 
 - Location: `.github/context/anti-patterns-critical.context.md`
@@ -94,14 +78,6 @@
 - Location: `.github/context/repo-index.md`
 - Machine-readable codebase map: project list, key files per layer, DI chain, API routes, CORS config, test patterns.
 - Read this instead of exploring the file system when you need structural facts.
-
-### decisions.md
-
-- Location: `docs/decisions.md`
-- Lightweight design decisions for this project.
-- Entries newest-first (D-004 before D-003).
-- ~~Strikethrough~~ means rejected — do NOT resurrect rejected options.
-- Read the relevant entry before editing logic in that area.
 
 ## Skills — use these for common code generation tasks
 

@@ -9,10 +9,9 @@ Use this skill when adding a new ASP.NET Core Web API controller to `src/GymClas
 
 ## Checklist before generating
 
-1. Read `.github/context/agent-decisions.md` — check for relevant decisions.
-2. Identify which Application service interface handles the feature.
-3. Identify the HTTP verbs and routes needed.
-4. Identify which exceptions from `AppExceptions.cs` map to which HTTP status codes.
+1. Identify which Application service interface handles the feature.
+2. Identify the HTTP verbs and routes needed.
+3. Identify which exceptions from `AppExceptions.cs` map to which HTTP status codes.
 
 ## File location
 

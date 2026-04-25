@@ -63,7 +63,7 @@ var confirmedCount = await _db.Bookings
     .CountAsync(b => b.GymClassId == request.GymClassId && b.Status == BookingStatus.Confirmed);
 ```
 
-**Count only `Confirmed` bookings** — `Waitlisted` bookings do not occupy a slot (D-001 in `docs/decisions.md`).
+**Count only `Confirmed` bookings** — `Waitlisted` bookings do not occupy a slot.
 
 ---
 
@@ -81,4 +81,3 @@ To change who gets priority on the waitlist, see `create-waitlist-promotion` ski
 - All guards run before `_db.Add(booking)` — no partial saves.
 - The `BookingResponse` must always include `WaitlistPosition` when `Status == Waitlisted`.
 - Adding a new guard requires a new unit test covering the blocked case. See `create-unit-test` skill.
-- If the new guard encodes a significant business decision, add a `docs/decisions.md` entry.
